@@ -112,17 +112,18 @@ function run (cmd, cwd, env, cb) {
 
 function build (target, runtime, opts, cb) {
   var args = [
-    'rebuild',
-    '--target=' + target
+    'install',
+    '--target=' + target,
+    '--abi=' + abi.getAbi(target, runtime)
   ]
 
   if (opts.arch) {
-    args.push('--target_arch=' + opts.arch)
+    args.push('--arch=' + opts.arch)
   }
 
   if (runtime === 'electron') {
     args.push('--runtime=electron')
-    args.push('--dist-url=https://atom.io/download/electron')
+    args.push('--disturl=https://atom.io/download/electron')
   }
 
   if (opts.debug) {
@@ -131,7 +132,7 @@ function build (target, runtime, opts, cb) {
     args.push('--release')
   }
 
-  var child = proc.spawn(os.platform() === 'win32' ? 'node-gyp.cmd' : 'node-gyp', args, {
+  var child = proc.spawn(os.platform() === 'win32' ? 'npm.cmd' : 'npm', args, {
     cwd: opts.cwd,
     env: opts.env,
     stdio: opts.quiet ? 'ignore' : 'inherit'
